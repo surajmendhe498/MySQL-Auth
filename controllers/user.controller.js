@@ -7,21 +7,17 @@ const signUp = async (req, res) => {
   try {
     const { name, email, password, age, phone } = req.body;
 
-    // Validate input
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if user already exists
     const userExist = await User.findOne({ where: { email } });
     if (userExist) {
       return res.status(409).json({ message: 'User already exists.' });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
     const newUser = new User({
       name,
       email,
@@ -32,8 +28,8 @@ const signUp = async (req, res) => {
 
     await newUser.save();
     res.status(201).json({ message: 'User signed up successfully', user: newUser });
+
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -64,4 +60,16 @@ const login= async(req, res)=>{
     }
 }
 
-module.exports = { signUp, login };
+const getAllUsers= async(req, res)=>{
+    try {
+        const users= await User.findAll();
+        res.status(200).json({message: 'users fetched successfully', data:users});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+}
+
+
+module.exports = { signUp, login, getAllUsers };
