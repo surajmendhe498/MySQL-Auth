@@ -22,5 +22,6 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-// Export the sequelize instance
+
+  
 module.exports = sequelize;
